@@ -1,0 +1,24 @@
+# Loop the VU forever 
+.vu
+.align 4
+
+.global loop_start
+.global loop_end
+
+loop_start:
+# Branching to a global seems to cause relocation issues
+inner_loop:
+
+# Set VI01 to 0
+NOP				IADDIU VI01, VI00, 0		
+NOP				NOP
+# Branch to inner_loop if VI01 is 0
+NOP				IBEQ VI01, VI00, inner_loop 
+NOP				NOP
+
+# This will never be hit
+NOP				B inner_loop
+NOP				NOP
+NOP[E]			NOP
+NOP				NOP
+loop_end:
