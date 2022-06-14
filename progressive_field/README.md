@@ -1,29 +1,35 @@
 # Progressive Field
 
 ## Description
-Checks the behaviour of FIELD in the GS CSR register when the PCRT is set to progressive. 
+Checks the behaviour of FIELD(in CSR) when the CMOD(in SMODE1)
+and VFP(in SYNCHV) bits are changed.
 
 ## PCSX2 Behaviour
-FIELD would alternate, just as if the PCRT was set to interlaced.
+PCSX2 would swap FIELD unconditionally, this caused some progressive games to
+bounce.
 
-This caused some progressive games to bounce.
+After the original progressive hardware test, PCSX2 would look at the interlace bit of SMODE2.
+If the bit was not set (progressive), PCSX2 would set FIELD, otherwise it would swap.
+
+This was later found to be incorrect behaviour.
 
 ## Findings
-When the video mode is set to progressive, FIELD is set.
+The original finding determined that when the video mode is set to progressive, FIELD is set.
+
+
+Turns out, the SMODE2 interlace bit has no control over FIELD behaviour.
+
+The actual behaviour is determined by CMOD (bits 13 & 14 in SMODE1)
+and VFP (bottom bits in SYNCV)
+
+![img](https://i.imgur.com/dsFYHm5.jpg)
 
 ## Related PR(s) or Issue(s)
 https://github.com/PCSX2/pcsx2/pull/6256
 
+https://github.com/PCSX2/pcsx2/pull/6342
 ## Expected Results
 
-This 30 times:
-```
-FIELD Prev 2000 Field New 2000
-```
+When testing CMOD 1, odd VFPs should say `FIELD IS CHANGING`
 
-In the case that the PCRT mode was set to interlaced, the expected result would be this, 15 times:
-
-```
-FIELD Prev 0 Field New 2000
-FIELD Prev 2000 Field New 0
-```
+When testing CMOD 0, no matter the VFP, it should say `FIELD IS NOT CHANGING`

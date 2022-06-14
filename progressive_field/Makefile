@@ -1,6 +1,6 @@
 EE_OBJS	= prog_field.o
 EE_BIN = prog_field.elf
-EE_LIBS = -lkernel -lgraph
+EE_LIBS = -lkernel
 
 all: $(EE_BIN)
 
