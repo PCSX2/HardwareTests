@@ -52,11 +52,6 @@ int main(void)
 	// Enable VSYNC event
 	GSCSR = 0x8;
 
-	printf("Checking FIELD when CMOD is set to 1\n");
-	SMODE1 |= (1 << 13);
-	test_gs_field();
-	printf("Checking FIELD when CMOD is set to 0\n");
-	SMODE1 &= ~(2 << 13);
 	test_gs_field();
 
 	SleepThread();
